@@ -7,6 +7,7 @@
 
 import 'package:f_testing_template/ui/pages/authentication/login.dart';
 import 'package:f_testing_template/ui/pages/authentication/signup.dart';
+import 'package:f_testing_template/ui/pages/content/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get_navigation/get_navigation.dart';
@@ -244,12 +245,45 @@ void main() {
     expect(find.text('Enter password'), findsOneWidget);
   });
 
-  testWidgets(
-      'Widget home visualización correo', (WidgetTester tester) async {
-        
-      });
+  testWidgets('Widget home visualización correo', (WidgetTester tester) async {
+    await tester.pumpWidget(const GetMaterialApp(
+        home: HomePage(
+            key: Key('HomePage'),
+            loggedEmail: 'mar@gmail.co',
+            loggedPassword: 'mar1234')));
 
-  testWidgets('Widget home nevegación detalle', (WidgetTester tester) async {});
+    expect(find.byKey(const Key('HomePage')), findsOneWidget);
+    await tester.pumpAndSettle();
 
-  testWidgets('Widget home logout', (WidgetTester tester) async {});
+    expect(find.text("Hello mar@gmail.co"), findsOneWidget);
+  });
+
+  testWidgets('Widget home nevegación detalle', (WidgetTester tester) async {
+    await tester.pumpWidget(const GetMaterialApp(
+        home: HomePage(
+            key: Key('HomePage'),
+            loggedEmail: 'mar@gmail.co',
+            loggedPassword: 'mar1234')));
+
+    expect(find.byKey(const Key('HomePage')), findsOneWidget);
+
+    await tester.tap(find.byKey(const Key('ButtonHomeDetail')));
+
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('DetailPage')), findsOneWidget);
+  });
+
+  testWidgets('Widget home logout', (WidgetTester tester) async {
+    await tester.pumpWidget(const GetMaterialApp(
+        home: HomePage(
+            key: Key('HomePage'),
+            loggedEmail: 'mar@gmail.co',
+            loggedPassword: 'mar1234')));
+
+    expect(find.byKey(const Key('HomePage')), findsOneWidget);
+    await tester.tap(find.byKey(const Key('ButtonHomeLogOff')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('LoginScreen')), findsOneWidget);
+  });
 }
